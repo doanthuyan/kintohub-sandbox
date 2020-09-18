@@ -3,7 +3,7 @@
 	<head>
 		<title>map created with amCharts | amCharts</title>
 		<meta name="description" content="map created using amCharts pixel map generator" />
-
+		<link rel="stylesheet" href="main.css">
 		<!--
 			This map was created using Pixel Map Generator by amCharts and is licensed under the Creative Commons Attribution 4.0 International License.
 			You may use this map the way you see fit as long as proper attribution to the name of amCharts is given in the form of link to https://pixelmap.amcharts.com/
@@ -12,7 +12,6 @@
 			If you would like to use this map without any attribution, you can acquire a commercial license for the JavaScript Maps - a tool that was used to produce this map.
 			To do so, visit amCharts Online Store: https://www.amcharts.com/online-store/
 		-->
-
 		<!-- amCharts javascript sources -->
 		<script type="text/javascript" src="https://www.amcharts.com/lib/3/ammap.js"></script>
 		<script type="text/javascript" src="https://www.amcharts.com/lib/3/maps/js/vietnamLow.js"></script>
@@ -27,7 +26,7 @@
 					"color": "#FFFFFF",
 					"projection": "mercator",
 					"backgroundAlpha": 1,
-					"backgroundColor": "rgba(80,80,80,1)",
+					"backgroundColor": getComputedStyle(document.documentElement).getPropertyValue ('--main-bgcolor'),
 					"dataProvider": {
 						"map": "vietnamLow",
 						"getAreasFromMap": true,
@@ -49,13 +48,13 @@
 						"borderThickness": 1,
 						"verticalPadding": 15,
 						"adjustBorderColor": true,
-						"color": "#FF0000",
+						"color": getComputedStyle(document.documentElement).getPropertyValue ('--main-textcolor'),
 						"fillColor": "#D6EAF8"
 					},
 					"areasSettings": {
-						"color": "rgba(129,129,129,1)",
-						"outlineColor": "rgba(80,80,80,1)",
-						"rollOverOutlineColor": "rgba(80,80,80,1)",
+						"color":  getComputedStyle(document.documentElement).getPropertyValue ('--main-linecolor'),
+						"outlineColor": getComputedStyle(document.documentElement).getPropertyValue ('--second-linecolor'),
+						"rollOverOutlineColor": getComputedStyle(document.documentElement).getPropertyValue ('--second-linecolor'),
 						"rollOverBrightness": 20,
 						"selectedBrightness": 20,
 						"selectable": true,
@@ -64,16 +63,16 @@
 					},
 					"imagesSettings": {
 						"alpha": 1,
-						"color": "rgba(129,129,129,1)",
+						"color": getComputedStyle(document.documentElement).getPropertyValue ('--main-linecolor'),
 						"outlineAlpha": 0,
 						"rollOverOutlineAlpha": 0,
-						"outlineColor": "rgba(80,80,80,1)",
+						"outlineColor": getComputedStyle(document.documentElement).getPropertyValue ('--second-linecolor'),
 						"rollOverBrightness": 20,
 						"selectedBrightness": 20,
 						"selectable": true
 					},
 					"linesSettings": {
-						"color": "rgba(129,129,129,1)",
+						"color": "#8d93ab",
 						"selectable": true,
 						"rollOverBrightness": 20,
 						"selectedBrightness": 20
@@ -86,25 +85,34 @@
 						"bottom": 30,
 						"minZoomLevel": 0.25,
 						"gridHeight": 100,
-						"gridAlpha": 0.1,
+						"gridAlpha": 0.5,
 						"gridBackgroundAlpha": 0,
-						"gridColor": "#FFFFFF",
+						"gridColor": getComputedStyle(document.documentElement).getPropertyValue ('--main-linecolor'),
 						"draggerAlpha": 1,
 						"buttonCornerRadius": 2
 					}
 				});
 			vnMap.addListener("clickMapObject", function(eventData) {
 				var data = eventData.mapObject;
-				var info = document.getElementById("panel");
+				var info = document.getElementById("subTitle");
 				console.log(data);
-				info.innerHTML = "<h3>" + data.title + " (" + data.id  + ")</h3>";
+				info.innerText = data.title + " (" + data.id  + ")";
+				var contentDiv = document.getElementById("subContent");
+				contentDiv.setAttribute("src",data.id  + "/content.html");
 			});
+			let c = getComputedStyle(document.documentElement).getPropertyValue ('--main-linecolor');
+			console.log(c);
+			c = getComputedStyle(document.documentElement).getPropertyValue ('--main-bgcolor');
+			console.log(c);
 		</script>
 	</head>
-	<body style="margin: 0;background-color: rgba(80,80,80,1);">
+	<body style="margin: 0;background-color: var(--second-bgcolor);">
 	<div style="display: flex;">
 		<div id="map" style="flex: 0 0 50%; height: 578px;"></div>
-		<div id="panel" style="flex: 1;"></div>
+		<div id="panel" style="flex: 1;background-color: var(--second-bgcolor);">
+			<h3 id='subTitle'></h3>
+			<iframe id="subContent" frameBorder="0"> </<iframe>
+		</div>
 	</div>
 	
 	</body>

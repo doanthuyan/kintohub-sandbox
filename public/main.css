@@ -1,0 +1,7 @@
+:root {
+    --main-bgcolor: rgba(214, 224, 240,1); 
+	--second-bgcolor:rgba(241, 243, 248);
+	--main-linecolor:rgba(141, 147, 171,1);
+	--second-linecolor:rgba(57, 59, 68,1);
+	--main-textcolor:rgb(57, 59, 68);
+}
