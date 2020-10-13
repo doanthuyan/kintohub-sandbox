@@ -1,9 +1,23 @@
 <!DOCTYPE html>
 <html lang='en'>
 <head>
+	<link rel="stylesheet" href="assets/css/main.css" />
+	<link rel="stylesheet" href="custom.css" />
+
 <title>Sniffer status</title>
 <style>
 .tableFixHead th { position: sticky; top: 0; }
+thead tr.fixfirst th, thead tr.fixfirst td {
+  position: sticky;
+  top: 0;
+  
+}
+
+thead tr.fixsecond th, thead tr.fixsecond td {
+  position: sticky;
+  top: 37px;
+  
+}
 table  { border-collapse: collapse; width: 100%; border: 1px solid black;}
 th, td { padding: 8px 16px; border: 1px solid black;}
 th     { background:#FCF3CF ; }
@@ -41,7 +55,8 @@ var mySniffer;
 function getSnifferList()
 {
     
-	URL = "https://crowdsniffing.org/api/sniffers";
+	//URL = "https://crowdsniffing.org/api/sniffers";
+	let URL="https://crowdsniffing.org/api/pollutantvalues/sniffers/current?timezone=Asia/Saigon";
 
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange  = function(){
@@ -68,7 +83,7 @@ function getNoteData(usData){
 	console.log(d.toISOString());
 	d.setDate(d.getDate() -1);
 	var fromStr = d.toISOString().slice(0,10);
-	var apiUrl= "https://crowdsniffing.org/api/chartdata?snifferId="+usData.id
+	var apiUrl= "https://crowdsniffing.org/api/chartdata?snifferId="+usData.sourceId
 			+"&start="+ fromStr + "&end=" + toStr +"&timezone=Asia/Saigon";
 	console.log(apiUrl);
 	
@@ -171,17 +186,16 @@ function parseSniffer(textData)
 }
 function buildTable(){
 	var table = document.createElement('table');
-	table.className= 'tableFixHead';
+	//table.className= 'tableFixHead';
 	addHeaders(table);
 	var body = document.createElement("tbody");
 	table.appendChild(body);
 	for(let n in mySniffer.data){
-		
+		if (mySniffer.data[n].status != "OPERATING" ) continue;
 		var row = body.insertRow();
 		var cId = row.insertCell();
-		cId.innerHTML = mySniffer.data[n].id;
-		var cCode= row.insertCell();
-		cCode.innerHTML = mySniffer.data[n].code;
+		cId.innerHTML = mySniffer.data[n].sourceId;
+		
 		var cGPS= row.insertCell();
 		cGPS.innerHTML = 'long: ' + mySniffer.data[n].gpsLocation.longitude +'<br>lat: '+ mySniffer.data[n].gpsLocation.latitude;
 		var cName= row.insertCell();
@@ -192,15 +206,14 @@ function buildTable(){
 			cStatus.style = 'background:#ccffb3  ;';
 			
 		}
-		var cMac= row.insertCell();
-		cMac.innerHTML = mySniffer.data[n].macAddress;
-		var cAddress= row.insertCell();
-		cAddress.innerHTML = mySniffer.data[n].address.address;
+		
 		console.log(mySniffer.data[n]);
-		var span = 1;
+		var span = 0;
 		if (mySniffer.data[n].status == "OPERATING" ) {
-			var buffer1 = row.insertCell();
+			/*var buffer1 = row.insertCell();
 			buffer1.innerHTML = 'Code\\Time';
+			row.insertCell().innerHTML = 'Latest values';
+			row.insertCell().innerHTML = 'Measured at';
 			row.insertCell().innerHTML = '03';
 			row.insertCell().innerHTML = '09';
 			row.insertCell().innerHTML = '15';
@@ -208,15 +221,21 @@ function buildTable(){
 			row.insertCell().innerHTML = '03';
 			row.insertCell().innerHTML = '09';
 			row.insertCell().innerHTML = '15';
-			row.insertCell().innerHTML = '21';
+			row.insertCell().innerHTML = '21';*/
 			//buffer.style ='padding: 0px 0px;'
+			
+			//24hrs details
 			for(let indx in code){
 				console.log(code[indx], mySniffer.data[n][code[indx]]);
 				span++;
-				var codeRow = table.insertRow();
+				var codeRow ;
+				if(span == 1){ codeRow = row;}
+				else {codeRow = table.insertRow();}
 				var cLabel = codeRow.insertCell();
 				cLabel.appendChild(document.createTextNode(code[indx]));
-				
+				var curVal = getCurrentValue(code[indx],mySniffer.data[n].pollutantValue);
+				codeRow.insertCell().innerHTML = curVal.value;
+				codeRow.insertCell().innerHTML = curVal.measuredAt;
 				if(mySniffer.data[n][code[indx]] != undefined){
 					
 					for(let x in mySniffer.data[n][code[indx]] ){
@@ -229,12 +248,12 @@ function buildTable(){
 				}
 			}
 			cId.rowSpan  = span;
-			cCode.rowSpan  = span;
+			
 			cGPS.rowSpan  = span;
-			cMac.rowSpan  = span;
+			
 			cName.rowSpan  = span;
 			cStatus.rowSpan  = span;
-			cAddress.rowSpan  = span;
+			
 			
 		}else{
 			row.insertCell();
@@ -250,6 +269,18 @@ function buildTable(){
 	document.getElementById('showMap').style.display = 'block';
 	sessionStorage.setItem("snifferData", JSON.stringify(mySniffer));
 }
+function getCurrentValue(pollutantCode, pollutantArrays){
+	
+	for(let i in pollutantArrays){
+		if (pollutantArrays[i].code == pollutantCode){
+			return pollutantArrays[i];
+		}
+	}
+	return {"code": pollutantCode,
+            "value": "",
+            "measuredAt": ""
+            };
+}
 function addHeaders(table) {
 	//var tzoffset = (new Date()).getTimezoneOffset() * 60000;
 	//var d = new Date(Date.now() - tzoffset);
@@ -259,22 +290,35 @@ function addHeaders(table) {
 	//console.log(d.toISOString());
 	d.setDate(d.getDate() -1);
 	var fromStr = d.toISOString().slice(0,10);
-	var headerTexts = ['ID','Code','GPS','Name','Status','MAC','Address','Pollutant',fromStr,toStr];
+	//var headerTexts = ['ID','Code','GPS','Name','Status','MAC','Address','Pollutant',fromStr,toStr];
+	var headerTexts = ['ID','GPS','Name','Status','Pollutant',fromStr,toStr];
+	var lowerHeaderTexts = ['Code\\Time','Latest values','Measured at','03','09','15','21','03','09','15','21'];
 	var header = document.createElement("thead");
-	var hRow = document.createElement("tr");
-  
-  
-  for( var i = 0; i < headerTexts.length; i++ ) {
-    var cell = document.createElement("th");
-	cell.innerHTML =  headerTexts[i];
-	if(headerTexts[i] == fromStr ) cell.colSpan = 4;
-	if (headerTexts[i] == toStr) cell.colSpan = 4;
-    //cell.appendChild(document.createTextNode(headTxt[i]));
-	hRow.appendChild(cell);
 	
-  }
-  header.appendChild(hRow);
-  table.appendChild(header);
+	var hRow = document.createElement("tr");
+	hRow.className ='fixfirst';
+  
+	for( var i = 0; i < headerTexts.length; i++ ) {
+		var cell = document.createElement("th");
+		cell.innerHTML =  headerTexts[i];
+		if(headerTexts[i] == fromStr ){ cell.colSpan = 4;}
+		else if (headerTexts[i] == toStr){ cell.colSpan = 4;}
+		else if(headerTexts[i] == 'Pollutant' ){ cell.colSpan = 3;}
+		else { cell.rowSpan = 3;}
+		//cell.appendChild(document.createTextNode(headTxt[i]));
+		hRow.appendChild(cell);
+
+	}
+	header.appendChild(hRow);
+	var lRow = document.createElement("tr");
+	lRow.className ='fixsecond';
+	for( var i = 0; i < lowerHeaderTexts.length; i++ ) {
+		var cell = document.createElement("th");
+		cell.innerHTML =  lowerHeaderTexts[i];
+		lRow.appendChild(cell);
+	}
+	header.appendChild(lRow);
+	table.appendChild(header);
 }
 
 </script>

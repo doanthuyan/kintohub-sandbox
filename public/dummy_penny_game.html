@@ -1,0 +1,439 @@
+<!DOCTYPE HTML>
+<!--
+	Miniport by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>Penny game</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<link rel="stylesheet" href="custom.css" />
+		<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
+		<!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
+		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+		<style>
+		table {
+			width: 80%;
+			border-collapse: collapse;
+			border: 1px solid black;
+		}
+		th, td{
+			padding: 20px;
+			border: 1px solid black;
+		}
+		.game-container{
+			display: grid;
+			grid-template-columns: auto auto auto auto auto auto;
+		}
+		.coin-container {
+		  display: grid;
+		  grid-template-columns: 40px 40px 40px 40px 40px 40px;
+		   grid-template-rows: 40px 40px 40px 40px 40px 40px 40px 40px 40px 40px 40px 40px 40px 40px 40px 40px;
+		}
+		.coin-cointainer-label {
+		  grid-column: 1 / 7;
+		}
+		.coin-button{
+			width: 40px;
+			heigh: 40px;
+			padding: 2px 2px 2px 2px;
+			font-size: 10px;
+			box-shadow:none;
+		}
+		.coin-flip{
+			background-color: #eef4c4;
+		}
+		.coint-disable{
+			background-color: #9ca098;
+		}
+		.countdown-btn{
+			background-color: #eef4c4;
+		}
+		.stats-label {
+		  grid-column: 1 / 3;
+		}
+		.stats-data {
+		  color: blue;
+		  font-size: 120%;
+		}
+		</style>
+	</head>
+	<body>
+	
+<div id="penny">
+	<div>
+	  <h3 v-bind:title="message" style="display:block;color:blue;font-weight:bold;">
+		{{ message }}<br>
+	  </h3><br>
+	</div>
+	<div id='big_patch'>
+		<h3 >Whole patch game</h3>
+		<div><button type="button" id='start_big' onclick='startGame("big")'>Start Patch Game</button> 
+			<button id='reset_big' onclick='resetBigGame()' disabled  class='countdown-btn'>Reset </button>
+		</div>
+		<div class="game-container">
+			
+			<div class="coin-container" id='c_big_1'>
+				<h4 class='coin-cointainer-label'>Analyse</h4>
+				<button disabled v-for="(itm, index) in bigPatch" :id="'big_'+index" class='coin-button nohover coint-disable' :value="itm" v-on:click="moveBigColum">
+					{{itm}}
+				</button>
+			</div>
+			<div class="coin-container" id='c_big_2'>
+				<h4 class='coin-cointainer-label'>Development</h4>
+				
+			</div>
+			<div class="coin-container" id='c_big_3'>
+				<h4 class='coin-cointainer-label'>Test</h4>
+				
+			</div>
+			<div class="coin-container" id='c_big_4'>
+				<h4 class='coin-cointainer-label'>Integrate</h4>
+				
+			</div>
+			<div class="coin-container" id='c_big_5'>
+				<h4 class='coin-cointainer-label'>Deliver</h4>
+				
+			</div>
+			<div class="coin-container" id='c_big_6'>
+				<h4 class='coin-cointainer-label'>Statistic</h4>
+				<label class='stats-label'>Delivered: </label><label id='total_big' class='stats-data'>{{bigDeliver | toUSD}}</label>
+				<label class='stats-label'>Clicked: </label><label id='total_big' class='stats-data'>{{bigClick}}</label>
+			</div>
+		</div>
+	</div>
+	<div>
+		<h3 >Small patch game</h3>
+		<div><button type="button" id='start_small' onclick='startGame("small")'>Start Small Game</button> 
+			<button id='reset_small' onclick='resetSmallGame()' disabled  class='countdown-btn'>Reset </button>
+		</div>
+		<div class="game-container">
+			<div class="coin-container" id='c_small_1'>
+				<h4 class='coin-cointainer-label'>Analyse</h4>
+				<button disabled v-for="(itm, index) in smallPatch" :id="'small_'+index" class='coin-button nohover coint-disable' :value="itm" v-on:click="moveSmallColum">
+					{{itm}}
+				</button>
+			</div>
+			<div class="coin-container" id='c_small_2'>
+				<h4 class='coin-cointainer-label'>Development</h4>
+				
+			</div>
+			<div class="coin-container" id='c_small_3'>
+				<h4 class='coin-cointainer-label'>Test</h4>
+				
+			</div>
+			<div class="coin-container" id='c_small_4'>
+				<h4 class='coin-cointainer-label'>Integrate</h4>
+				
+			</div>
+			<div class="coin-container" id='c_small_5'>
+				<h4 class='coin-cointainer-label'>Deliver</h4>
+				
+			</div>
+			<div class="coin-container" id='c_small_6'>
+				<h4 class='coin-cointainer-label'>Statistic</h4>
+				<label class='stats-label'>Delivered: </label><label id='total_small' class='stats-data'>{{smallDeliver | toUSD}}</label>
+				<label class='stats-label'>Clicked: </label><label id='total_small' class='stats-data'>{{smallClick}}</label>
+			</div>
+		</div>
+	</div>
+	<div>
+		<h3 >Value-first Small patch game</h3>
+		<div><button type="button" id='start_sorted' onclick='startGame("sorted")'>Start Value-first Game</button> 
+			<button id='reset_sorted' onclick='resetSortedGame()' disabled  class='countdown-btn'>Reset </button>
+		</div>
+		<div class="game-container" disable>
+			<div class="coin-container" id='c_sorted_1'>
+				<h4 class='coin-cointainer-label'>Analyse</h4>
+				<button disabled v-for="(itm, index) in sortedPatch" :id="'sorted_'+index" class='coin-button  nohover coint-disable' :value="itm" v-on:click="moveSortColum">
+					{{itm}}
+				</button>
+			</div>
+			<div class="coin-container" id='c_sorted_2'>
+				<h4 class='coin-cointainer-label'>Development</h4>
+				
+			</div>
+			<div class="coin-container" id='c_sorted_3'>
+				<h4 class='coin-cointainer-label'>Test</h4>
+				
+			</div>
+			<div class="coin-container" id='c_sorted_4'>
+				<h4 class='coin-cointainer-label'>Integrate</h4>
+				
+			</div>
+			<div class="coin-container" id='c_sorted_5'>
+				<h4 class='coin-cointainer-label'>Deliver</h4>
+				
+			</div>
+			<div class="coin-container" id='c_sorted_6'>
+				<h4 class='coin-cointainer-label'>Statistic</h4>
+				<label class='stats-label'>Delivered: </label><label id='total_sorted' class='stats-data'>{{sortedDeliver | toUSD}}</label>
+				<label class='stats-label'>Clicked: </label><label id='total_sorted' class='stats-data'>{{sortedClick}}</label>
+			</div>
+		</div>
+	</div>
+</div>
+	<!-- Scripts -->
+	<script src="assets/js/jquery.min.js"></script>
+	<script src="assets/js/jquery.scrolly.min.js"></script>
+	<script src="assets/js/skel.min.js"></script>
+	<script src="assets/js/skel-viewport.min.js"></script>
+	<script src="assets/js/util.js"></script>
+	<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
+	<script src="assets/js/main.js"></script>
+	<script  type="text/javascript" language="javascript">
+	window.addEventListener('load', (event) => {
+		createData();
+	});
+	var stateCount = 5;
+	var timeCount = 15;
+	var app = new Vue({
+	  el: '#penny',
+	  
+	  data: {
+		message: 'Penny collecting game. Build with vuejs. On ' + new Date().toLocaleString(),
+		seen: true,
+		sortedPatch:[],
+		sortedDeliver: 0,
+		sortedClick: 0,
+		bigPatch:[],
+		bigDeliver: 0,
+		bigClick: 0,
+		bigProcess: 0,
+		smallPatch:[],
+		smallDeliver: 0,
+		smallClick: 0,
+	  },
+	  methods:{
+		moveSortColum:function(event){
+			app.sortedClick += 1;
+			
+			console.log(event);
+			var element = event.target;
+			
+			var parentId = element.parentNode.id;
+			console.log(parentId);
+			var thenum = parseInt(parentId.slice(parentId.length - 1))+1;
+			if(thenum == stateCount){
+				element.disabled = true;
+				element.classList.toggle("coin-flip");
+				app.sortedDeliver += parseFloat(element.innerText);
+			}
+			console.log(thenum);
+			var newParentId = parentId.slice(0,parentId.length - 1)+thenum;
+			console.log(newParentId);
+			element.parentNode.removeChild(element);
+			var newParent = document.getElementById(newParentId);
+			newParent.appendChild(element);
+		},
+		moveSmallColum:function(event){
+			app.smallClick += 1;
+			
+			console.log(event);
+			var element = event.target;
+			
+			var parentId = element.parentNode.id;
+			console.log(parentId);
+			var thenum = parseInt(parentId.slice(parentId.length - 1))+1;
+			if(thenum == stateCount){
+				element.disabled = true;
+				element.classList.toggle("coin-flip");
+				app.smallDeliver += parseFloat(element.innerText);
+			}
+			console.log(thenum);
+			var newParentId = parentId.slice(0,parentId.length - 1)+thenum;
+			console.log(newParentId);
+			element.parentNode.removeChild(element);
+			var newParent = document.getElementById(newParentId);
+			newParent.appendChild(element);
+		},
+		moveBigColum:function(event){
+			
+			app.bigClick += 1;
+			app.bigProcess += 1;
+			console.log(event);
+			var element = event.target;
+			element.classList.toggle("coin-flip");
+			element.disabled = true;
+			console.log(element.nodeName );
+			//process all to next column
+			
+			if(app.bigProcess == app.bigPatch.length){
+				var parentId = element.parentNode.id;
+				console.log(parentId);
+				var thenum = parseInt(parentId.slice(parentId.length - 1))+1;
+				
+				console.log(thenum);
+				var newParentId = parentId.slice(0,parentId.length - 1)+thenum;
+				var newParent = document.getElementById(newParentId);
+				clearCoins(parentId);
+				/*var oldParent = document.getElementById(parentId);
+				var arrays = oldParent.children;
+				
+				console.log(newParentId);
+				var savedChild = oldParent.firstChild;
+				while (oldParent.firstChild) {
+					oldParent.removeChild(oldParent.firstChild);
+				}
+				oldParent.appendChild(savedChild);
+				*/
+				for (var i = 0 ; i < app.bigPatch.length;i++){
+					var btn = document.createElement("button");
+					btn.addEventListener("click", this.moveBigColum);
+					btn.classList.add('coin-button');
+					btn.id = 'big_' + i;
+					btn.value = app.bigPatch[i];
+					btn.innerText = app.bigPatch[i];
+					newParent.appendChild(btn);
+					if(thenum == stateCount){
+						btn.disabled = true;
+						element.classList.toggle("coin-flip");
+						app.bigDeliver += parseFloat(btn.innerText);
+					}
+				}
+				app.bigProcess = 0;
+				
+			}
+		}
+	  },
+	  filters: {
+		toUSD (value) {
+		  return `$${value.toLocaleString()}`
+		}
+	  }
+	});
+	function clearCoins(containerId){
+		var oldParent = document.getElementById(containerId);
+		var savedChild = oldParent.firstChild;
+		while (oldParent.firstChild) {
+			oldParent.removeChild(oldParent.firstChild);
+		}
+		oldParent.appendChild(savedChild);
+	}
+	function resetBigGame(){
+		clearCoins('c_big_1');
+		clearCoins('c_big_2');
+		clearCoins('c_big_3');
+		clearCoins('c_big_4');
+		clearCoins('c_big_5');
+		for (var i = 0 ; i < app.bigPatch.length;i++){
+			var btn = document.createElement("button");
+			btn.addEventListener("click", this.moveBigColum);
+			btn.classList.add('coin-button');
+			btn.id = 'big_' + i;
+			btn.value = app.bigPatch[i];
+			btn.innerText = app.bigPatch[i];
+			document.getElementById('c_big_1').appendChild(btn);
+			
+		}
+		app.bigProcess = 0;
+		app.bigClick = 0;
+		app.bigDeliver = 0;
+		document.getElementById('start_big').innerText = 'Start Patch Game';
+		document.getElementById('start_big').disabled = false;
+		document.getElementById('reset_big').disabled = true;
+	}
+	function resetSmallGame(){
+		clearCoins('c_small_1');
+		clearCoins('c_small_2');
+		clearCoins('c_small_3');
+		clearCoins('c_small_4');
+		clearCoins('c_small_5');
+		for (var i = 0 ; i < app.smallPatch.length;i++){
+			var btn = document.createElement("button");
+			btn.addEventListener("click", this.moveSmallColum);
+			btn.classList.add('coin-button');
+			btn.id = 'small_' + i;
+			btn.value = app.smallPatch[i];
+			btn.innerText = app.smallPatch[i];
+			document.getElementById('c_small_1').appendChild(btn);
+			
+		}
+		app.smallClick = 0;
+		app.smallDeliver = 0;
+		document.getElementById('start_small').innerText = 'Start Small Game';
+		document.getElementById('start_small').disabled = false;
+		document.getElementById('reset_small').disabled = true;
+	}
+	function resetSortedGame(){
+		clearCoins('c_sorted_1');
+		clearCoins('c_sorted_2');
+		clearCoins('c_sorted_3');
+		clearCoins('c_sorted_4');
+		clearCoins('c_sorted_5');
+		for (var i = 0 ; i < app.sortedPatch.length;i++){
+			var btn = document.createElement("button");
+			btn.addEventListener("click", this.moveSortColum);
+			btn.classList.add('coin-button');
+			btn.id = 'sorted_' + i;
+			btn.value = app.sortedPatch[i];
+			btn.innerText = app.sortedPatch[i];
+			document.getElementById('c_sorted_1').appendChild(btn);
+			
+		}
+		app.sortedClick = 0;
+		app.sortedDeliver = 0;
+		document.getElementById('start_sorted').innerText = 'Start Value-first Game';
+		document.getElementById('start_sorted').disabled = false;
+		document.getElementById('reset_sorted').disabled = true;
+	}
+	function startGame(gameId){
+		console.log('Start ' + gameId);
+		enableAllCoins(gameId)
+		var timeleft = timeCount;
+		document.getElementById('start_'+gameId).classList.toggle("countdown-btn");
+		document.getElementById('start_'+gameId).disabled = true;
+		var playTimer = setInterval(function(){
+			
+		  if(timeleft <= 0){
+			clearInterval(playTimer);
+			//
+			document.getElementById('start_'+gameId).innerText = "Finished";
+			document.getElementById('reset_'+gameId).classList.toggle("countdown-btn");
+			document.getElementById('reset_'+gameId).disabled = false;
+			disableAllCoins(gameId);
+		  } else {
+			document.getElementById('start_'+gameId).innerText = timeleft + " seconds";
+		  }
+		  timeleft -= 1;
+		}, 1000);
+	}
+	function disableAllCoins(gameId){
+		for(var i = 0; i < app.bigPatch.length; i++){
+			document.getElementById(gameId+'_' + i).disabled = true;
+			document.getElementById(gameId+'_'+i).classList.toggle('coint-disable');
+		}
+	}
+	function enableAllCoins(gameId){
+		for(var i = 0; i < app.bigPatch.length; i++){
+			document.getElementById(gameId +'_'+ i).disabled = false;
+			document.getElementById(gameId+'_'+i).classList.toggle('coint-disable');
+		}
+	}
+	function createData(){
+		app.sortedPatch = ['2','1','1','1','1','1','1','1'
+						,'0.50','0.50','0.50','0.50','0.50','0.50','0.50','0.50','0.50','0.50','0.50'
+						,'0.20','0.20','0.20','0.20','0.20','0.20','0.20','0.20','0.20','0.20','0.20','0.20','0.20','0.20','0.20','0.20','0.20','0.20','0.20','0.20','0.20'
+						,'0.10','0.10','0.10','0.10','0.10','0.10'
+						,'0.05','0.05','0.05','0.05','0.05','0.05'
+						,'0.02','0.02','0.02','0.02','0.02','0.02','0.02','0.02','0.02','0.02'
+						,'0.01','0.01','0.01','0.01','0.01','0.01','0.01','0.01','0.01','0.01','0.01','0.01','0.01','0.01','0.01','0.01','0.01','0.01','0.01','0.01'
+						];
+		app.smallPatch = app.sortedPatch.slice();
+		shuffleArray(app.smallPatch);
+		app.bigPatch = app.smallPatch.slice();
+		//app.bigPatch  = ['2','1','1','1','1'];
+	}
+	function shuffleArray(array) {
+		for (let i = array.length - 1; i > 0; i--) {
+			const j = Math.floor(Math.random() * (i + 1));
+			[array[i], array[j]] = [array[j], array[i]];
+		}
+	}
+	</script>
+	</body>
+</html>
