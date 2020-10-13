@@ -54,11 +54,13 @@
 			background-color: #eef4c4;
 		}
 		.stats-label {
-		  grid-column: 1 / 3;
+		  grid-column: 1 / 4;
+		  color: #FF5733;
+		  font-size: 150%;
 		}
 		.stats-data {
 		  color: blue;
-		  font-size: 120%;
+		  font-size: 150%;
 		}
 		</style>
 	</head>
@@ -66,12 +68,15 @@
 	
 <div id="penny">
 	<div>
-	  <h3 v-bind:title="message" style="display:block;color:blue;font-weight:bold;">
-		{{ message }}<br>
-	  </h3><br>
+	  <h4 v-bind:title="message" style="display:block;color:blue;font-weight:bold;">
+		{{ message }}
+	  </h4>
+	  <h2>Rule: Move coin (by Clicking on it) across columns until 'Deliver'
+	  </h2>
 	</div>
 	<div id='big_patch'>
 		<h3 >Whole patch game</h3>
+		<h4>Rule: all coins must be clicked before moving to next column</h4>
 		<div><button type="button" id='start_big' onclick='startGame("big")'>Start Patch Game</button> 
 			<button id='reset_big' onclick='resetBigGame()' disabled  class='countdown-btn'>Reset </button>
 		</div>
@@ -108,6 +113,7 @@
 	</div>
 	<div>
 		<h3 >Small patch game</h3>
+		<h4>Rule: Coin move immediately when it is clicked</h4>
 		<div><button type="button" id='start_small' onclick='startGame("small")'>Start Small Game</button> 
 			<button id='reset_small' onclick='resetSmallGame()' disabled  class='countdown-btn'>Reset </button>
 		</div>
@@ -143,6 +149,7 @@
 	</div>
 	<div>
 		<h3 >Value-first Small patch game</h3>
+		<h4>Rule: Coin move immediately when it is clicked. Board is sorted</h4>
 		<div><button type="button" id='start_sorted' onclick='startGame("sorted")'>Start Value-first Game</button> 
 			<button id='reset_sorted' onclick='resetSortedGame()' disabled  class='countdown-btn'>Reset </button>
 		</div>
