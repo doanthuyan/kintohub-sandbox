@@ -87,6 +87,7 @@
 		}
 		.countdown-btn{
 			background-color: #eef4c4;
+			font-size: 150%;
 		}
 		.stats-label {
 		  
@@ -167,7 +168,7 @@
 		<h3 >Whole patch game</h3>
 		<h4>Rule: all coins must be clicked before moving to next column</h4>
 		<div><button type="button" class='game-button' id='start_big' onclick='startGame("big")'>Start Patch Game</button> 
-			<button id='reset_big' class='game-button' onclick='resetBigGame()' disabled  class='countdown-btn'>Reset </button>
+			<button id='reset_big' class='game-button ' onclick='resetBigGame()' disabled  class='countdown-btn'>Reset </button>
 			<label class='stats-label'>Delivered: </label><label id='total_big' class='stats-data'>&#163; {{bigDeliver | toCurrency}}</label>
 			<label class='stats-label'>Clicked: </label><label id='total_big' class='stats-data'>{{bigClick}}</label>
 		</div>
@@ -514,14 +515,14 @@
 		enableAllCoins(gameId)
 		var timeleft = timeCount;
 		document.getElementById('start_'+gameId).classList.toggle("countdown-btn");
+		document.getElementById('reset_'+gameId).disabled = true;
 		document.getElementById('start_'+gameId).disabled = true;
 		var playTimer = setInterval(function(){
 			
 		  if(timeleft <= 0){
 			clearInterval(playTimer);
-			//
 			document.getElementById('start_'+gameId).innerText = "Finished";
-			document.getElementById('reset_'+gameId).classList.toggle("countdown-btn");
+			
 			document.getElementById('reset_'+gameId).disabled = false;
 			disableAllCoins(gameId);
 		  } else {
