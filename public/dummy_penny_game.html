@@ -10,13 +10,14 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
-		<link rel="stylesheet" href="assets/css/main.css" />
-		<link rel="stylesheet" href="custom.css" />
+		
+		<link rel="stylesheet" href="style.css" />
 		<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
 		<!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
 		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 		<style>
 		table {
+			margin: 20px;
 			width: 80%;
 			border-collapse: collapse;
 			border: 1px solid black;
@@ -25,15 +26,31 @@
 			padding: 20px;
 			border: 1px solid black;
 		}
+		.title-div{
+			margin: 15px;
+		}
+		.game-div{
+			margin: 20px;
+		}
 		.game-container{
 			display: grid;
-			grid-column-gap: 10px;
+			grid-column-gap: 20px;
 			grid-template-columns: auto auto auto auto auto;
 		}
 		.coin-container {
 		  display: grid;
 		  grid-template-columns: 40px 40px 40px 40px 40px 40px;
 		   grid-template-rows: 40px 40px 40px 40px 40px 40px 40px 40px 40px 40px 40px 40px 40px 40px 40px 40px;
+		}
+		.legend-div{
+			display: grid;
+			grid-column-gap: 20px;
+			grid-template-columns: 60px 60px 60px 60px 60px 60px 60px 60px ;
+			grid-template-rows: 40px 20px;
+		}
+		.legend-label{
+			font-size: 120%;
+			align-self: end;
 		}
 		.stats-container{
 			display: grid;
@@ -44,6 +61,12 @@
 		}
 		.coin-container-label {
 		  grid-column: 1 / 7;
+		  font-size: 150%;
+		  text-decoration: underline;
+		}
+		.game-button{
+			font-size: 150%;
+			background-color: #a2e9d8;
 		}
 		.coin-button{
 			width: 40px;
@@ -51,12 +74,16 @@
 			padding: 2px 2px 2px 2px;
 			font-size: 10px;
 			box-shadow:none;
+			border: none;
+			opacity: 1;
 		}
 		.coin-flip{
 			background-color: #eef4c4;
+			opacity: 0.4;
 		}
-		.coint-disable{
+		.coin-disable{
 			background-color: #9ca098;
+			opacity: 0.6;
 		}
 		.countdown-btn{
 			background-color: #eef4c4;
@@ -70,33 +97,86 @@
 		  color: blue;
 		  font-size: 150%;
 		}
+		
+		.coin-100{
+			background: url("images/coins/1.png") no-repeat;
+			background-size: contain;
+		}
+		.coin-200{
+			background: url("images/coins/2.png") no-repeat;
+			background-size: contain;
+		}
+		.coin-1{
+			background: url("images/coins/0.01.png") no-repeat;
+			background-size: contain;
+		}
+		.coin-2{
+			background: url("images/coins/0.02.png") no-repeat;
+			background-size: contain;
+		}
+		.coin-5{
+			background: url("images/coins/0.05.png") no-repeat;
+			background-size: contain;
+		}
+		.coin-10{
+			background: url("images/coins/0.10.png") no-repeat;
+			background-size: contain;
+		}
+		.coin-20{
+			background: url("images/coins/0.20.png") no-repeat;
+			background-size: contain;
+		}
+		.coin-50{
+			background: url("images/coins/0.50.png") no-repeat;
+			background-size: contain;
+		}
 		</style>
 	</head>
 	<body>
 	
 <div id="penny">
-	<div>
-	  
-	  <h3 style="display:block;color:blue;font-weight:bold;">
-	  Rule: You have 20 seconds to deliver coin. Coin has to move (by Clicking on it) across stage from 'Analyse' until 'Deliver'
-	  </h3>
-	  <p> Try & compare different games: How much you deliver? How many click you spent?
+	<div class='title-div'>
+	  Rule: 
+	  <ol>
+		<li>You have 30 seconds to deliver coin. </li>
+		<li>Coin is moved (by Clicking on it) across stage from 'Analyse' until 'Deliver'</li>
+		<li>Only coin in 'Deliver' counted</li>
+	  </ol>
+	  <p> Try & compare different games: How much you deliver? How many click you spent?</p>
+	  <div class='legend-div'>
+		<button class='coin-200 coin-button nohover' ></button>
+		<button class='coin-100 coin-button nohover' ></button>
+		<button class='coin-50 coin-button nohover' ></button>
+		<button class='coin-20 coin-button nohover' ></button>
+		<button class='coin-10 coin-button nohover' ></button>
+		<button class='coin-5 coin-button nohover' ></button>
+		<button class='coin-2 coin-button nohover' ></button>
+		<button class='coin-1 coin-button nohover' ></button>
+		<label class='legend-label'>&#163;  2</label>
+		<label class='legend-label'>&#163;  1</label>
+		<label class='legend-label'>&#163;  0.5</label>
+		<label class='legend-label'>&#163;  0.2</label>
+		<label class='legend-label'>&#163;  0.1</label>
+		<label class='legend-label'>&#163;  0.05</label>
+		<label class='legend-label'>&#163;  0.02</label>
+		<label class='legend-label'>&#163;  0.01</label>
+	  </div>
 	</div>
-	<hr>
-	<div id='big_patch'>
+	<hr >
+	<div id='big_patch'  class='game-div'>
 		<h3 >Whole patch game</h3>
 		<h4>Rule: all coins must be clicked before moving to next column</h4>
-		<div><button type="button" id='start_big' onclick='startGame("big")'>Start Patch Game</button> 
-			<button id='reset_big' onclick='resetBigGame()' disabled  class='countdown-btn'>Reset </button>
-			<label class='stats-label'>Delivered: </label><label id='total_big' class='stats-data'>{{bigDeliver | toUSD}}</label>
+		<div><button type="button" class='game-button' id='start_big' onclick='startGame("big")'>Start Patch Game</button> 
+			<button id='reset_big' class='game-button' onclick='resetBigGame()' disabled  class='countdown-btn'>Reset </button>
+			<label class='stats-label'>Delivered: </label><label id='total_big' class='stats-data'>&#163; {{bigDeliver | toCurrency}}</label>
 			<label class='stats-label'>Clicked: </label><label id='total_big' class='stats-data'>{{bigClick}}</label>
 		</div>
 		<div class="game-container">
 			
 			<div class="coin-container" id='c_big_1'>
 				<h4 class='coin-container-label'>Analyse</h4>
-				<button disabled v-for="(itm, index) in bigPatch" :id="'big_'+index" class='coin-button nohover coint-disable' :value="itm" v-on:click="moveBigColum">
-					{{itm}}
+				<button disabled v-for="(itm, index) in bigPatch" :id="'big_'+index" :class="'coin-button nohover coin-disable coin-' + parseFloat(itm)*100" :value="itm" v-on:click="moveBigColum">
+					
 				</button>
 			</div>
 			<div class="coin-container" id='c_big_2'>
@@ -117,26 +197,26 @@
 			</div>
 			<!-- <div class="stats-container" id='c_big_6'>
 				<h4 class='stats-container-label'>Statistic</h4>
-				<label class='stats-label'>Delivered: </label><label id='total_big' class='stats-data'>{{bigDeliver | toUSD}}</label>
+				<label class='stats-label'>Delivered: </label><label id='total_big' class='stats-data'>{{bigDeliver | toCurrency}}</label>
 				<label class='stats-label'>Clicked: </label><label id='total_big' class='stats-data'>{{bigClick}}</label>
 			</div>
 			-->
 		</div>
 	</div>
 	<hr>
-	<div>
+	<div class='game-div'>
 		<h3 >Small patch game</h3>
 		<h4>Rule: Coin move immediately when it is clicked. Clickable in all Stage</h4>
-		<div><button type="button" id='start_small' onclick='startGame("small")'>Start Small Game</button> 
-			<button id='reset_small' onclick='resetSmallGame()' disabled  class='countdown-btn'>Reset </button>
-			<label class='stats-label'>Delivered: </label><label id='total_small' class='stats-data'>{{smallDeliver | toUSD}}</label>
+		<div><button  class='game-button' type="button" id='start_small' onclick='startGame("small")'>Start Small Game</button> 
+			<button  class='game-button' id='reset_small' onclick='resetSmallGame()' disabled  class='countdown-btn'>Reset </button>
+			<label class='stats-label'>Delivered: </label><label id='total_small' class='stats-data'>&#163; {{smallDeliver | toCurrency}}</label>
 				<label class='stats-label'>Clicked: </label><label id='total_small' class='stats-data'>{{smallClick}}</label>
 		</div>
 		<div class="game-container">
 			<div class="coin-container" id='c_small_1'>
 				<h4 class='coin-container-label'>Analyse</h4>
-				<button disabled v-for="(itm, index) in smallPatch" :id="'small_'+index" class='coin-button nohover coint-disable' :value="itm" v-on:click="moveSmallColum">
-					{{itm}}
+				<button disabled v-for="(itm, index) in smallPatch" :id="'small_'+index" :class="'coin-button nohover coin-disable coin-' + parseFloat(itm)*100":value="itm" v-on:click="moveSmallColum">
+					
 				</button>
 			</div>
 			<div class="coin-container" id='c_small_2'>
@@ -157,26 +237,25 @@
 			</div>
 			<!--<div class="stats-container" id='c_small_6'>
 				<h4 class='stats-container-label'>Statistic</h4>
-				<label class='stats-label'>Delivered: </label><label id='total_small' class='stats-data'>{{smallDeliver | toUSD}}</label>
+				<label class='stats-label'>Delivered: </label><label id='total_small' class='stats-data'>{{smallDeliver | toCurrency}}</label>
 				<label class='stats-label'>Clicked: </label><label id='total_small' class='stats-data'>{{smallClick}}</label>
 			</div>
 			-->
 		</div>
 	</div>
 	<hr>
-	<div>
+	<div class='game-div'>
 		<h3 >Value-first Small patch game</h3>
 		<h4>Rule: Coin move immediately when it is clicked. Clickable in all Stage. Board is sorted</h4>
-		<div><button type="button" id='start_sorted' onclick='startGame("sorted")'>Start Value-first Game</button> 
-			<button id='reset_sorted' onclick='resetSortedGame()' disabled  class='countdown-btn'>Reset </button>
-			<label class='stats-label'>Delivered: </label><label id='total_sorted' class='stats-data'>{{sortedDeliver | toUSD}}</label>
+		<div><button class='game-button' type="button" id='start_sorted' onclick='startGame("sorted")'>Start Value-first Game</button> 
+			<button class='game-button' id='reset_sorted' onclick='resetSortedGame()' disabled  class='countdown-btn'>Reset </button>
+			<label class='stats-label'>Delivered: </label><label id='total_sorted' class='stats-data'>&#163; {{sortedDeliver | toCurrency}}</label>
 				<label class='stats-label'>Clicked: </label><label id='total_sorted' class='stats-data'>{{sortedClick}}</label>
 		</div>
 		<div class="game-container" disable>
 			<div class="coin-container" id='c_sorted_1'>
 				<h4 class='coin-container-label'>Analyse</h4>
-				<button disabled v-for="(itm, index) in sortedPatch" :id="'sorted_'+index" class='coin-button  nohover coint-disable' :value="itm" v-on:click="moveSortColum">
-					{{itm}}
+				<button disabled v-for="(itm, index) in sortedPatch" :id="'sorted_'+index" :class="'coin-button nohover coin-disable coin-' + parseFloat(itm)*100" :value="itm" v-on:click="moveSortColum">
 				</button>
 			</div>
 			<div class="coin-container" id='c_sorted_2'>
@@ -197,7 +276,7 @@
 			</div>
 			<!--<div class="stats-container" id='c_sorted_6'>
 				<h4 class='stats-container-label'>Statistic</h4>
-				<label class='stats-label'>Delivered: </label><label id='total_sorted' class='stats-data'>{{sortedDeliver | toUSD}}</label>
+				<label class='stats-label'>Delivered: </label><label id='total_sorted' class='stats-data'>{{sortedDeliver | toCurrency}}</label>
 				<label class='stats-label'>Clicked: </label><label id='total_sorted' class='stats-data'>{{sortedClick}}</label>
 			</div>
 			-->
@@ -222,7 +301,7 @@
 		createData();
 	});
 	var stateCount = 5;
-	var timeCount = 15;
+	var timeCount = 30;
 	var app = new Vue({
 	  el: '#penny',
 	  
@@ -253,7 +332,7 @@
 			if(thenum == stateCount){
 				element.disabled = true;
 				element.classList.toggle("coin-flip");
-				app.sortedDeliver += parseFloat(element.innerText);
+				app.sortedDeliver += parseFloat(element.value);
 			}
 			console.log(thenum);
 			var newParentId = parentId.slice(0,parentId.length - 1)+thenum;
@@ -274,7 +353,7 @@
 			if(thenum == stateCount){
 				element.disabled = true;
 				element.classList.toggle("coin-flip");
-				app.smallDeliver += parseFloat(element.innerText);
+				app.smallDeliver += parseFloat(element.value);
 			}
 			console.log(thenum);
 			var newParentId = parentId.slice(0,parentId.length - 1)+thenum;
@@ -315,7 +394,7 @@
 				*/
 				for (var i = 0 ; i < app.bigPatch.length;i++){
 					var btn = document.createElement("button");
-					btn.addEventListener("click", this.moveBigColum);
+					btn.addEventListener("click", app.moveBigColum);
 					btn.classList.add('coin-button');
 					btn.id = 'big_' + i;
 					btn.value = app.bigPatch[i];
@@ -324,7 +403,7 @@
 					if(thenum == stateCount){
 						btn.disabled = true;
 						element.classList.toggle("coin-flip");
-						app.bigDeliver += parseFloat(btn.innerText);
+						app.bigDeliver += parseFloat(btn.value);
 					}
 				}
 				app.bigProcess = 0;
@@ -333,8 +412,8 @@
 		}
 	  },
 	  filters: {
-		toUSD (value) {
-		  return `$${value.toLocaleString()}`
+		toCurrency (value) {
+		  return `${value.toLocaleString()}`
 		}
 	  }
 	});
@@ -354,14 +433,19 @@
 		clearCoins('c_big_5');
 		for (var i = 0 ; i < app.bigPatch.length;i++){
 			var btn = document.createElement("button");
-			btn.addEventListener("click", this.moveBigColum);
+			btn.addEventListener("click", app.moveBigColum);
 			btn.classList.add('coin-button');
+			btn.classList.add('nohover');
+			
+			btn.classList.add('coin-' + parseFloat(app.bigPatch[i])*100);
+			
 			btn.id = 'big_' + i;
 			btn.value = app.bigPatch[i];
-			btn.innerText = app.bigPatch[i];
+			//btn.innerText = app.bigPatch[i];
 			document.getElementById('c_big_1').appendChild(btn);
 			
 		}
+		disableAllCoins("big");
 		app.bigProcess = 0;
 		app.bigClick = 0;
 		app.bigDeliver = 0;
@@ -378,14 +462,18 @@
 		clearCoins('c_small_5');
 		for (var i = 0 ; i < app.smallPatch.length;i++){
 			var btn = document.createElement("button");
-			btn.addEventListener("click", this.moveSmallColum);
-			btn.classList.add('coin-button');
+			btn.addEventListener("click", app.moveSmallColum);
+			btn.classList.toggle('coin-button');
+			btn.classList.toggle('nohover');
+			btn.classList.toggle('coin-' + parseFloat(app.smallPatch[i])*100);
+
 			btn.id = 'small_' + i;
 			btn.value = app.smallPatch[i];
-			btn.innerText = app.smallPatch[i];
+			//btn.innerText = app.smallPatch[i];
 			document.getElementById('c_small_1').appendChild(btn);
 			
 		}
+		disableAllCoins("small");
 		app.smallClick = 0;
 		app.smallDeliver = 0;
 		document.getElementById('start_small').innerText = 'Start Small Game';
@@ -401,14 +489,19 @@
 		clearCoins('c_sorted_5');
 		for (var i = 0 ; i < app.sortedPatch.length;i++){
 			var btn = document.createElement("button");
-			btn.addEventListener("click", this.moveSortColum);
+			btn.addEventListener("click", app.moveSortColum);
 			btn.classList.add('coin-button');
+			btn.classList.add('nohover');
+			
+			btn.classList.add('coin-' + parseFloat(app.sortedPatch[i])*100);
+
 			btn.id = 'sorted_' + i;
 			btn.value = app.sortedPatch[i];
-			btn.innerText = app.sortedPatch[i];
+			//btn.innerText = app.sortedPatch[i];
 			document.getElementById('c_sorted_1').appendChild(btn);
 			
 		}
+		disableAllCoins("sorted");
 		app.sortedClick = 0;
 		app.sortedDeliver = 0;
 		document.getElementById('start_sorted').innerText = 'Start Value-first Game';
@@ -440,13 +533,13 @@
 	function disableAllCoins(gameId){
 		for(var i = 0; i < app.bigPatch.length; i++){
 			document.getElementById(gameId+'_' + i).disabled = true;
-			document.getElementById(gameId+'_'+i).classList.toggle('coint-disable');
+			document.getElementById(gameId+'_'+i).classList.toggle('coin-disable');
 		}
 	}
 	function enableAllCoins(gameId){
 		for(var i = 0; i < app.bigPatch.length; i++){
 			document.getElementById(gameId +'_'+ i).disabled = false;
-			document.getElementById(gameId+'_'+i).classList.toggle('coint-disable');
+			document.getElementById(gameId+'_'+i).classList.toggle('coin-disable');
 		}
 	}
 	function createData(){
