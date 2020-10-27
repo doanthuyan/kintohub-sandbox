@@ -1,0 +1,189 @@
+<!DOCTYPE HTML>
+<!--
+	Miniport by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>Belief drag-drop game</title>
+		<meta charset="utf-8" />
+		<link rel="stylesheet" href="style.css" />
+		<style>
+		h2 {
+		  color: #a7a3a4;
+		  margin-left: 80px;
+		}
+
+		[data-drop-target] {
+			min-height: 400px;
+			width: 300px;
+			margin: 5px;
+			background-color: gainsboro;
+			float: left;
+		}
+		.drag-enter {
+			border: 1px solid #000;
+		}
+		.box {
+			width: 290px;
+			margin: 5px 5px 5px 5px;
+			border-style: dotted;
+			float: left;
+			text-align: center;
+			font-size: 120%
+		}
+		.box:nth-child(3) {
+		  clear: both;
+		}
+		.yellow {
+			background-color: mistyrose;
+		}
+		.green {
+			background-color: lightgreen;
+		}
+		.white {
+			background-color: white;
+		}
+		</style>
+</head>
+
+<body>
+<div id='belief'>
+		<!--First Drop Target-->
+<h3>Drag belief to match their concept!</h3>
+<div data-drop-target="true" data-index='0' id='c0'></div>
+
+<!--Second Drop Target-->
+<div data-drop-target="true" data-index='1' id='c1'><h4>The core belief of WATERFALL</h4></div>
+<div data-drop-target="true" data-index='2' id='c2'><h4>The core belief of AGILE</h4></div>
+<div data-drop-target="true" data-index='3' id='c3'><h4>The core belief of LEAN</h4></div>
+</div>
+	<script>
+	window.addEventListener('load', (event) => {
+		initData();
+	});
+		const orgData = [
+			{index:1,text:'You can know everything required to build a software product properly at the start of the project'},
+			{index:1,text:'Customer can accurately tell you what they want at the start of the project'},
+			{index:1,text:'You need to get feedback from the customer until the end of the project'},
+			{index:1,text:'Manager, developers, and customers can gauge the status of a project by looking at completed milestones as reflected in documentation. That is, given proper documentation, it is not necessary to deliver complete, tested software until the very end of the project'},
+			{index:1,text:'You can effectively have separate groups do analysis, design, code, and test. That is, there is little loss of information in the handoff between these groups'},
+			{index:1,text:'Handoffs between people in different roles can be done efficiently by writing down what was done in each step'},
+			{index:1,text:'You can test at the end of a project and achieve that required quality'},
+			{index:1,text:'Management can demand that certain work be done at a certain time and should expect it to happen'},
+			{index:1,text:'Giving people many projects to work on simultaneously is a good approach to achieving 100% productivity because then everyone is always busy.'},
+			{index:2,text:'You cannot know everything required to build a software product at the start of the project'},
+			{index:2,text:'Customers cannot accurately tell you what they want at the start of the project; instead, they will gain clarity as the project proceeds'},
+			{index:2,text:'You want feedback from customer as often as possible and you want to give developers feedback on how they are doing as soon as possible'},
+			{index:2,text:'Working code is the most accurate way of seeing the progress of the development effort'},
+			{index:2,text:'A group working together minimizes delays as well as the loss of information between people'},
+			{index:2,text:'Moving to test to the front of the development cycle improves the conversation between developers and customers and testers and, thus, improves the quality of the code'},
+			{index:2,text:'While management can set expectations for what work is done, management must not demand how that work is done'},
+			{index:2,text:'Working on one project at a time improves the productivity of a team'},
+			{index:3,text:'Most errors are due to the system within which people work rather than to the individuals themselves.'},
+			{index:3,text:'People doing the work are the best one to understand how to improve the system'},
+			{index:3,text:'Ad hoc is not an acceptable process'},
+			{index:3,text:'Looking at when things are done in a process is a more useful guide than trying to make sure every step of the way is as efficient as possible'},
+			{index:3,text:'Our measure for success must be related to the amount of time between when ideas come in and when they are manifested as value to our customer'},
+			{index:3,text:'Management must work with the team to improve the way it works to improve its own efficiency'},
+			{index:3,text:'Team are most efficient when the amount of work is limited to their capacity'},
+			{index:3,text:'Team efficiency improves by minimizing the amount of work in progress at any one time'},
+			{index:3,text:'When evaluating actions, we must optimize the whole, not merely improve individual steps in the process'},
+			{index:3,text:'There are principles in software development that must be followed in order to reduce waste'},
+			
+		];
+		function initData(){
+			var parent = document.getElementById('c0');
+			for(var i= 0;i < orgData.length; i++){
+				//<div id="box4" draggable="true" class="box green"></div>
+				var child = document.createElement('div');
+				child.id = 'box' + i;
+				child.setAttribute('draggable', true);
+				child.setAttribute('data-index', orgData[i].index);
+				child.classList.add('box');
+				child.classList.add('white');
+				child.innerText = orgData[i].text;
+				parent.appendChild(child);
+			}
+			initDraggableFeature()
+		}
+		//Function handleDragStart(), Its purpose is to store the id of the draggable element.
+		function handleDragStart(e) {
+			e.dataTransfer.setData("text", this.id); //note: using "this" is the same as using: e.target.
+		}//end function
+
+
+		//The dragenter event fires when dragging an object over the target. 
+		//The css class "drag-enter" is append to the targets object.
+		function handleDragEnterLeave(e) {
+			if(e.type == "dragenter") {
+				this.className = "drag-enter" 
+			} else {
+				this.className = "" //Note: "this" referces to the target element where the "dragenter" event is firing from.
+			}
+		}//end function
+
+
+
+		//Function handles dragover event eg.. moving your source div over the target div element.
+		//If drop event occurs, the function retrieves the draggable element’s id from the DataTransfer object.
+		function handleOverDrop(e) {
+			e.preventDefault(); 
+      //Depending on the browser in use, not using the preventDefault() could cause any number of strange default behaviours to occur.
+			if (e.type != "drop") {
+				return; //Means function will exit if no "drop" event is fired.
+			}
+			//Stores dragged elements ID in var draggedId
+			var draggedId = e.dataTransfer.getData("text");
+			//Stores referrence to element being dragged in var draggedEl
+			var draggedEl = document.getElementById(draggedId);
+
+			//if the event "drop" is fired on the dragged elements original drop target e.i..  it's current parentNode, 
+			//then set it's css class to ="" which will remove dotted lines around the drop target and exit the function.
+			if (draggedEl.parentNode == this) {
+				this.className = "";
+				return; //note: when a return is reached a function exits.
+			}
+			//Otherwise if the event "drop" is fired from a different target element, detach the dragged element node from it's
+			//current drop target (i.e current perantNode) and append it to the new target element. Also remove dotted css class. 
+			draggedEl.parentNode.removeChild(draggedEl);
+			this.appendChild(draggedEl); //Note: "this" references to the current target div that is firing the "drop" event.
+			this.className = "";
+			draggedEl.className = "";
+			draggedEl.classList.add('box');
+			console.log(this.getAttribute('data-index'));
+			console.log(draggedEl.getAttribute('data-index'));
+			if(this.getAttribute('data-index') == draggedEl.getAttribute('data-index')){
+				draggedEl.classList.add('green');
+			}else if(this.getAttribute('data-index') == '0'){
+				draggedEl.classList.add('white');
+			}else{
+				draggedEl.classList.add('yellow');
+			}
+		}//end Function
+		
+
+		function initDraggableFeature(){
+			//Retrieve two groups of elements, those that are draggable and those that are drop targets:
+			var draggable = document.querySelectorAll('[draggable]');
+			var targets = document.querySelectorAll('[data-drop-target]');
+		//Note: using the document.querySelectorAll() will aquire every element that is using the attribute defind in the (..)
+
+
+			//Register event listeners for the"dragstart" event on the draggable elements:
+			for(var i = 0; i < draggable.length; i++) {
+				draggable[i].addEventListener("dragstart", handleDragStart);
+			}
+
+			//Register event listeners for "dragover", "drop", "dragenter" & "dragleave" events on the drop target elements.
+			for(var i = 0; i < targets.length; i++) {
+				targets[i].addEventListener("dragover", handleOverDrop);
+				targets[i].addEventListener("drop", handleOverDrop);
+				targets[i].addEventListener("dragenter", handleDragEnterLeave);
+				targets[i].addEventListener("dragleave", handleDragEnterLeave);
+			}
+		}
+</script>
+</body>
+</html>
