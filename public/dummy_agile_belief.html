@@ -63,7 +63,7 @@
 	window.addEventListener('load', (event) => {
 		initData();
 	});
-		const orgData = [
+		var orgData = [
 			{index:1,text:'You can know everything required to build a software product properly at the start of the project'},
 			{index:1,text:'Customer can accurately tell you what they want at the start of the project'},
 			{index:1,text:'You need to get feedback from the customer until the end of the project'},
@@ -94,6 +94,7 @@
 			
 		];
 		function initData(){
+			shuffleArray(orgData);
 			var parent = document.getElementById('c0');
 			for(var i= 0;i < orgData.length; i++){
 				//<div id="box4" draggable="true" class="box green"></div>
@@ -184,6 +185,12 @@
 				targets[i].addEventListener("dragleave", handleDragEnterLeave);
 			}
 		}
+		function shuffleArray(array) {
+		for (let i = array.length - 1; i > 0; i--) {
+			const j = Math.floor(Math.random() * (i + 1));
+			[array[i], array[j]] = [array[j], array[i]];
+		}
+	}
 </script>
 </body>
 </html>
